@@ -80,6 +80,11 @@ sed -i 's/"Web 管理"/"Web管理"/g' `egrep "Web 管理" -rl ./`
 sed -i 's/"管理权"/"改密码"/g' `egrep "管理权" -rl ./`
 sed -i 's/"带宽监控"/"监控"/g' `egrep "带宽监控" -rl ./`
 
+cpu_arch="$(cat "/proc/cpuinfo" | grep "model name" | sed -n "1p" | awk -F ': ' '{print $2}')"
+[ -z "${cpu_arch}" ] && cpu_arch="Rk3399 Dual-core Cortex-A72 up to 1.8GHz@Quad-core Cortex-A53 up to 1.4GHz"
+cpu_cores="$(cat "/proc/cpuinfo" | grep "processor" | wc -l)"
+sys_temp="$(awk "BEGIN{printf (\"%.1f\n\",$(cat /sys/class/thermal/thermal_zone0/temp)/1000) }")°C"
+echo -n "${cpu_arch} x ${cpu_cores} (${sys_temp})"
 
 # 整理固件包时候,删除您不想要的固件或者文件,让它不需要上传到Actions空间（根据编译机型变化,自行调整需要删除的固件名称）
 cat >"$CLEAR_PATH" <<-EOF
